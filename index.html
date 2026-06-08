@@ -3,719 +3,350 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<meta name="theme-color" content="#fdf0f5"/>
+<meta name="theme-color" content="#fdf6f0"/>
 <title>Happy 15th Birthday Cutie Pie 🌸</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
-
 <style>
-/* ─── RESET & TOKENS ─────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-
 :root{
-  --rose:     #e8a0b8;
-  --rose-d:   #c5728f;
-  --rose-l:   #fde8f0;
-  --mauve:    #c3a0c8;
-  --mauve-d:  #9a6fa6;
-  --cream:    #fdf6f0;
-  --warm:     #f5e6dc;
-  --text:     #6b4f5f;
-  --text-l:   #9a7a8a;
-  --gold:     #d4a855;
-  --glass:    rgba(255,255,255,0.55);
-  --blur:     blur(18px);
-  --shadow:   0 8px 40px rgba(180,100,130,0.12);
-  --shadow-l: 0 4px 20px rgba(180,100,130,0.08);
-  --r:        28px;
-  --ease:     cubic-bezier(0.23,1,0.32,1);
+  --rose:#e8a0b8;--rose-d:#c5728f;--rose-l:#fde8f0;
+  --mauve:#c3a0c8;--mauve-d:#9a6fa6;
+  --cream:#fdf6f0;--warm:#f5e6dc;
+  --text:#6b4f5f;--text-l:#9a7a8a;--gold:#d4a855;
+  --glass:rgba(255,255,255,0.55);
+  --blur:blur(16px);
+  --shadow:0 12px 50px rgba(180,100,130,0.14);
+  --shadow-l:0 4px 24px rgba(180,100,130,0.09);
+  --r:24px;
+  --ease:cubic-bezier(0.23,1,0.32,1);
 }
-
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-
-body{
-  background: var(--cream);
-  font-family: 'Jost', sans-serif;
-  color: var(--text);
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* ─── SCROLLBAR ──────────────────────────────── */
-::-webkit-scrollbar{width:5px}
+@media(max-width:600px){:root{--blur:blur(8px)}}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{background:var(--cream);font-family:'Jost',sans-serif;color:var(--text);overflow-x:hidden;position:relative;width:100%}
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--rose-l)}
 ::-webkit-scrollbar-thumb{background:var(--rose);border-radius:20px}
 
-/* ─── CANVAS BG ──────────────────────────────── */
-#canvas-bg{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;opacity:0.5;
-}
+/* ── FIXED LAYERS ─────────── */
+#canvas-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.4}
+#petals{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+.petal{position:absolute;top:-8%;animation:petalFall linear infinite;will-change:transform,opacity}
+@keyframes petalFall{0%{transform:translateY(-5vh) rotate(0deg);opacity:0}8%{opacity:0.7}100%{transform:translateY(110vh) rotate(720deg) translateX(60px);opacity:0}}
+main{position:relative;z-index:3;overflow-x:hidden;width:100%}
 
-/* ─── NOISE OVERLAY ──────────────────────────── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:1;opacity:0.4;
-}
-
-/* ─── PETALS ─────────────────────────────────── */
-#petals{
-  position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;
-}
-.petal{
-  position:absolute;top:-8%;
-  width:clamp(10px,2vw,18px);
-  aspect-ratio:1;
-  border-radius:0% 70% 0% 70%;
-  animation:petalFall linear infinite;
-  will-change:transform,opacity;
-}
-@keyframes petalFall{
-  0%  {transform:translateY(-5vh) rotate(0deg) translateX(0); opacity:0}
-  8%  {opacity:0.7}
-  100%{transform:translateY(108vh) rotate(720deg) translateX(60px); opacity:0}
-}
-
-/* ─── MUSIC BUTTON ───────────────────────────── */
-#music-btn{
-  position:fixed;bottom:clamp(14px,4vw,24px);right:clamp(14px,4vw,24px);
-  width:clamp(44px,10vw,52px);height:clamp(44px,10vw,52px);
-  background:var(--glass);backdrop-filter:var(--blur);
-  border:1.5px solid rgba(255,255,255,0.7);
-  border-radius:50%;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:clamp(18px,4vw,22px);
-  box-shadow:var(--shadow-l);z-index:100;
-  transition:transform 0.3s var(--ease),box-shadow 0.3s;
-  -webkit-tap-highlight-color:transparent;
-}
-#music-btn:hover{transform:scale(1.1);box-shadow:var(--shadow)}
+/* ── UI CHROME ─────────────── */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--rose),var(--mauve),var(--gold));z-index:999;width:0%;transition:width 0.08s linear;pointer-events:none}
+#music-btn{position:fixed;bottom:clamp(16px,4vw,24px);right:clamp(16px,4vw,24px);width:clamp(46px,11vw,54px);height:clamp(46px,11vw,54px);background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid rgba(255,255,255,0.7);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:clamp(18px,4.5vw,22px);box-shadow:var(--shadow-l);z-index:100;transition:transform 0.3s var(--ease);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 #music-btn.playing{animation:pulse-btn 2s infinite}
-@keyframes pulse-btn{
-  0%,100%{box-shadow:0 0 0 0 rgba(232,160,184,0.4)}
-  50%{box-shadow:0 0 0 10px rgba(232,160,184,0)}
-}
+@keyframes pulse-btn{0%,100%{box-shadow:0 0 0 0 rgba(232,160,184,0.45)}50%{box-shadow:0 0 0 14px rgba(232,160,184,0)}}
 
-/* ─── PROGRESS BAR ───────────────────────────── */
-#progress{
-  position:fixed;top:0;left:0;height:3px;
-  background:linear-gradient(90deg,var(--rose),var(--mauve),var(--gold));
-  z-index:999;width:0%;transition:width 0.1s linear;
-}
+/* ── REVEAL ────────────────── */
+.rv,.rv-l,.rv-r,.rv-s,.rv-rot{opacity:0;will-change:transform,opacity}
+.rv{transform:translateY(40px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease)}
+.rv-l{transform:translateX(-46px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease)}
+.rv-r{transform:translateX(46px);transition:opacity 0.85s var(--ease),transform 0.85s var(--ease)}
+.rv-s{transform:scale(0.9);transition:opacity 0.82s var(--ease),transform 0.82s var(--ease)}
+.rv-rot{transform:translateY(28px) rotate(-3deg);transition:opacity 0.9s var(--ease),transform 0.9s var(--ease)}
+.rv.on,.rv-l.on,.rv-r.on,.rv-s.on,.rv-rot.on{opacity:1;transform:none}
+.d1{transition-delay:.06s}.d2{transition-delay:.14s}.d3{transition-delay:.22s}
+.d4{transition-delay:.30s}.d5{transition-delay:.38s}.d6{transition-delay:.46s}
+.d7{transition-delay:.54s}.d8{transition-delay:.62s}
 
-/* ─── MAIN WRAPPER ───────────────────────────── */
-main{position:relative;z-index:3}
+/* ── SPARKLE ───────────────── */
+.sparkle{position:fixed;pointer-events:none;z-index:998;border-radius:50%;animation:sparkleAnim 0.65s var(--ease) forwards}
+@keyframes sparkleAnim{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}}
 
-/* ─── SECTION DEFAULTS ───────────────────────── */
-.section{
-  padding:clamp(60px,10vh,140px) clamp(20px,6vw,80px);
-  position:relative;
-}
+/* ── LIGHTBOX ──────────────── */
+#lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(35,15,25,0.94);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);padding:20px}
+#lightbox.open{display:flex}
+#lightbox img{max-width:min(90vw,700px);max-height:90svh;object-fit:contain;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.5);animation:lbIn 0.4s var(--ease)}
+@keyframes lbIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+#lb-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:50%;width:42px;height:42px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#lb-prev{left:14px}#lb-next{right:14px}
+#lb-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.55);font-size:12px;letter-spacing:0.1em}
 
-/* ─── INTRO ──────────────────────────────────── */
-#intro{
-  min-height:100svh;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;overflow:hidden;
-  background:radial-gradient(ellipse at 60% 40%, rgba(232,160,184,0.25) 0%, transparent 60%),
-             radial-gradient(ellipse at 20% 80%, rgba(195,160,200,0.2) 0%, transparent 55%),
-             var(--cream);
-}
+/* ── SECTION BASE ──────────── */
+.section{padding:clamp(55px,9vh,120px) clamp(18px,5.5vw,72px);position:relative;overflow:hidden}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6.5vw,3.8rem);text-align:center;margin-bottom:clamp(36px,6.5vh,72px);color:var(--rose-d);letter-spacing:0.02em;display:flex;flex-direction:column;align-items:center;gap:10px}
+.section-title::after{content:'';display:block;width:55px;height:2px;background:linear-gradient(90deg,var(--rose),var(--mauve));border-radius:4px}
+.hero-line{width:clamp(55px,13vw,90px);height:1.5px;background:linear-gradient(90deg,transparent,var(--rose),transparent)}
 
-.intro-inner{
-  position:relative;
-  display:flex;flex-direction:column;
-  align-items:center;gap:clamp(16px,3vw,28px);
-  padding:clamp(30px,5vw,60px);
-  max-width:min(700px,92vw);
-}
+/* ── INTRO ─────────────────── */
+#intro{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 60% 40%,rgba(232,160,184,0.25),transparent 58%),radial-gradient(ellipse at 20% 80%,rgba(195,160,200,0.2),transparent 55%),var(--cream)}
+.intro-inner{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.8vw,24px);padding:clamp(28px,5vw,55px);max-width:min(680px,92vw)}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:100px;background:rgba(255,255,255,0.72);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(232,160,184,0.3);font-size:clamp(10px,2.4vw,11.5px);letter-spacing:0.14em;text-transform:uppercase;color:var(--rose-d);font-weight:500;opacity:0;transform:translateY(18px);animation:revealUp 0.8s var(--ease) 0.3s forwards;white-space:nowrap}
+.intro-name{font-family:'Pinyon Script',cursive;font-size:clamp(4rem,15vw,9rem);color:var(--rose-d);line-height:1;opacity:0;transform:translateY(38px) scale(0.93);animation:revealUp 1.2s var(--ease) 0.5s forwards;text-shadow:0 4px 36px rgba(197,114,143,0.2)}
+.intro-sub{font-size:clamp(0.88rem,2.5vw,1.05rem);line-height:2;color:var(--text-l);font-weight:300;letter-spacing:0.03em;max-width:500px;opacity:0;transform:translateY(22px);animation:revealUp 1s var(--ease) 0.8s forwards}
+.scroll-hint{margin-top:clamp(18px,3.5vh,36px);display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--rose);opacity:0;animation:revealUp 1s var(--ease) 1.5s forwards}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--rose),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(0.5);opacity:0.3}}
+@keyframes revealUp{to{opacity:1;transform:none}}
 
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:8px 18px;border-radius:100px;
-  background:rgba(255,255,255,0.7);backdrop-filter:var(--blur);
-  border:1px solid rgba(232,160,184,0.3);
-  font-size:clamp(10px,2.5vw,12px);letter-spacing:0.15em;
-  text-transform:uppercase;color:var(--rose-d);
-  font-weight:500;
-  opacity:0;transform:translateY(20px);
-  animation:revealUp 0.8s var(--ease) 0.3s forwards;
-}
+/* ── MARQUEE ───────────────── */
+.marquee-ribbon{overflow:hidden;padding:clamp(12px,2vw,18px) 0;background:var(--rose-d);display:flex;white-space:nowrap;position:relative;z-index:3}
+.marquee-track{display:flex;animation:marqueeScroll 22s linear infinite;will-change:transform;flex-shrink:0}
+.marquee-track+.marquee-track{animation-delay:-11s}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{padding:0 clamp(16px,3.5vw,32px);font-size:clamp(0.65rem,1.7vw,0.85rem);letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.9);font-weight:400;display:inline-flex;align-items:center;gap:10px}
+.marquee-item::after{content:'✦';color:rgba(255,255,255,0.35);font-size:0.5em}
 
-.intro-name{
-  font-family:'Pinyon Script',cursive;
-  font-size:clamp(4.5rem,16vw,9rem);
-  color:var(--rose-d);line-height:1;
-  opacity:0;transform:translateY(40px) scale(0.95);
-  animation:revealUp 1.1s var(--ease) 0.5s forwards;
-  text-shadow:0 4px 30px rgba(197,114,143,0.2);
-}
+/* ── HERO ──────────────────── */
+#hero{min-height:80svh;display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(rgba(253,246,240,0.5),rgba(253,246,240,0.5)),radial-gradient(ellipse at 30% 50%,rgba(232,160,184,0.28),transparent 60%),radial-gradient(ellipse at 80% 30%,rgba(195,160,200,0.22),transparent 55%)}
+.hero-inner{max-width:min(820px,90vw);display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.2vw,18px)}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.05rem,2.8vw,1.45rem);color:var(--rose);letter-spacing:0.04em}
+.hero-big{font-family:'Pinyon Script',cursive;font-size:clamp(3rem,11vw,7rem);color:var(--rose-d);line-height:1.05;text-shadow:0 3px 22px rgba(197,114,143,0.16)}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,5.5vw,3.2rem);font-weight:500;color:var(--text);letter-spacing:0.02em}
+.hero-para{font-size:clamp(0.88rem,2.2vw,1rem);line-height:2;color:var(--text-l);max-width:560px;font-weight:300}
 
-.intro-sub{
-  font-size:clamp(0.9rem,2.5vw,1.1rem);
-  line-height:1.9;color:var(--text-l);
-  font-weight:300;letter-spacing:0.03em;
-  max-width:520px;
-  opacity:0;transform:translateY(25px);
-  animation:revealUp 1s var(--ease) 0.8s forwards;
+/* ── COUNTDOWN ─────────────── */
+#countdown{
+  min-height:68svh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(232,160,184,0.22),transparent 58%),
+             radial-gradient(ellipse at 90% 100%,rgba(195,160,200,0.18),transparent 50%),
+             linear-gradient(160deg,var(--rose-l) 0%,var(--cream) 55%,var(--warm) 100%);
+  padding:clamp(48px,8vh,100px) clamp(18px,5vw,60px);
+  overflow:hidden
 }
+.cd-wrap{display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.8vw,22px);text-align:center;max-width:min(500px,92vw);width:100%}
+.cd-eyebrow{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--rose);font-weight:500}
+.cd-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(1.45rem,4.5vw,2.5rem);color:var(--text);font-weight:500;line-height:1.3}
+.cd-date{font-family:'Pinyon Script',cursive;font-size:clamp(1.6rem,5.5vw,2.8rem);color:var(--rose-d);line-height:1.15}
+.cd-boxes{display:flex;align-items:flex-end;justify-content:center;gap:0;width:100%;margin-top:4px}
+.cd-box{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid rgba(255,255,255,0.9);border-radius:clamp(14px,3vw,20px);padding:clamp(12px,3vw,20px) clamp(8px,2.2vw,16px);box-shadow:var(--shadow-l),inset 0 1px 0 rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0;max-width:90px;margin:0 clamp(3px,1vw,6px)}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,8vw,3.8rem);color:var(--rose-d);font-weight:600;line-height:1;font-variant-numeric:tabular-nums;transition:opacity 0.14s ease,transform 0.14s ease;display:block;text-align:center;min-width:2ch}
+.cd-num.out{opacity:0.15;transform:translateY(-5px) scale(0.82)}
+.cd-lbl{font-size:clamp(8px,2vw,10px);letter-spacing:0.18em;text-transform:uppercase;color:var(--text-l);font-weight:400;white-space:nowrap}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,5vw,2.8rem);color:var(--rose);line-height:1;margin-bottom:clamp(20px,3.5vw,30px);flex-shrink:0;animation:sepBlink 1.05s ease-in-out infinite;width:clamp(8px,2vw,16px);text-align:center}
+@keyframes sepBlink{0%,100%{opacity:1}48%,52%{opacity:0.1}}
+.cd-divider{width:min(260px,75%);height:1px;background:linear-gradient(90deg,transparent,var(--rose),transparent);margin:4px 0}
+.cd-total-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cd-total-lbl{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-l);font-weight:400}
+.cd-total-num{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,8.5vw,4rem);color:var(--rose-d);font-weight:300;letter-spacing:0.05em;font-variant-numeric:tabular-nums;transition:opacity 0.1s ease,transform 0.1s ease;line-height:1}
+.cd-total-num.out{opacity:0.15;transform:scale(0.9)}
+.cd-total-sub{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--rose);animation:pulseText 2.2s ease-in-out infinite}
+@keyframes pulseText{0%,100%{opacity:1}50%{opacity:0.4}}
 
-.scroll-hint{
-  margin-top:clamp(20px,4vh,40px);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--rose);opacity:0;
-  animation:revealUp 1s var(--ease) 1.4s forwards;
-}
-.scroll-line{
-  width:1px;height:48px;
-  background:linear-gradient(to bottom,var(--rose),transparent);
-  animation:scrollPulse 2s ease-in-out infinite;
-}
-@keyframes scrollPulse{
-  0%,100%{transform:scaleY(1);opacity:1}
-  50%{transform:scaleY(0.6);opacity:0.4}
-}
-
-@keyframes revealUp{
-  to{opacity:1;transform:none}
-}
-
-/* ─── HERO ───────────────────────────────────── */
-#hero{
-  min-height:80svh;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-  background:
-    linear-gradient(rgba(253,246,240,0.6),rgba(253,246,240,0.6)),
-    radial-gradient(ellipse at 30% 50%,rgba(232,160,184,0.3),transparent 60%),
-    radial-gradient(ellipse at 80% 30%,rgba(195,160,200,0.25),transparent 55%);
-}
-
-.hero-inner{
-  max-width:min(820px,92vw);
+/* ── LIVED CARD ──────────────── */
+.lived-card{
+  width:100%;
+  background:linear-gradient(135deg,rgba(255,255,255,0.52),rgba(253,232,240,0.28));
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,0.9);
+  border-radius:clamp(16px,3vw,24px);
+  padding:clamp(20px,4vw,32px) clamp(14px,4vw,28px);
+  box-shadow:var(--shadow-l),inset 0 1px 0 rgba(255,255,255,0.95);
   display:flex;flex-direction:column;align-items:center;
-  gap:clamp(14px,2.5vw,22px);
+  gap:clamp(10px,2vw,16px);
 }
-
-.hero-tag{
+.lived-eyebrow{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.82rem,2.2vw,0.98rem);color:var(--mauve-d);
+  letter-spacing:0.03em;opacity:0.88;
+}
+.lived-row{
+  display:flex;align-items:flex-end;justify-content:center;
+  gap:clamp(4px,1.2vw,10px);flex-wrap:wrap;
+}
+.lived-unit{display:flex;flex-direction:column;align-items:center;gap:5px}
+.lived-val{
   font-family:'Cormorant Garamond',serif;
-  font-style:italic;font-size:clamp(1.1rem,3vw,1.5rem);
-  color:var(--rose);letter-spacing:0.04em;
+  font-size:clamp(1.7rem,6vw,2.8rem);
+  color:var(--mauve-d);font-weight:300;line-height:1;
+  font-variant-numeric:tabular-nums;
+  transition:opacity 0.14s ease,transform 0.14s ease;
 }
-
-.hero-big{
-  font-family:'Pinyon Script',cursive;
-  font-size:clamp(3.5rem,12vw,7rem);
-  color:var(--rose-d);line-height:1.05;
-  text-shadow:0 3px 20px rgba(197,114,143,0.15);
-}
-
-.hero-line{
-  width:clamp(60px,15vw,100px);height:1.5px;
-  background:linear-gradient(90deg,transparent,var(--rose),transparent);
-}
-
-.hero-title{
+.lived-val.out{opacity:0.15;transform:translateY(-4px) scale(0.85)}
+.lived-lbl{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-l);font-weight:400}
+.lived-sep{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2rem,6vw,3.5rem);
-  font-weight:500;color:var(--text);
-  letter-spacing:0.02em;
+  font-size:clamp(1rem,3vw,1.6rem);color:var(--rose);
+  margin-bottom:clamp(14px,2.5vw,20px);opacity:0.4;flex-shrink:0;
+}
+.lived-poem{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(0.8rem,2vw,0.92rem);color:var(--rose-d);
+  letter-spacing:0.04em;
+  animation:pulseText 2.8s ease-in-out infinite;animation-delay:0.6s;
 }
 
-.hero-para{
-  font-size:clamp(0.9rem,2.2vw,1.05rem);
-  line-height:2;color:var(--text-l);
-  max-width:580px;font-weight:300;
-}
+/* ── SPLIT PHOTO ROW ───────── */
+.split-row{display:grid;gap:clamp(12px,2.2vw,20px);padding:clamp(8px,2.5vw,24px) clamp(18px,5.5vw,72px) clamp(36px,5.5vh,65px);position:relative;z-index:3}
+.split-row.three{grid-template-columns:1.4fr 1fr 1.4fr}
+.split-row.two{grid-template-columns:1fr 1fr}
+@media(max-width:580px){.split-row.three,.split-row.two{grid-template-columns:1fr}}
+.split-photo{position:relative;overflow:hidden;border-radius:var(--r);box-shadow:var(--shadow-l);cursor:pointer}
+.split-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s var(--ease)}
+.split-photo:hover img{transform:scale(1.06)}
+.split-photo .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:1.8rem;background:linear-gradient(135deg,var(--rose-l),var(--warm));color:var(--rose-d)}
+.split-photo .ph span{font-family:'Cormorant Garamond',serif;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-l)}
+.split-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,160,184,0.13),rgba(195,160,200,0.08));opacity:0;transition:opacity 0.4s;pointer-events:none}
+.split-photo:hover::after{opacity:1}
+.split-photo.tall{aspect-ratio:3/4}.split-photo.wide{aspect-ratio:4/3}.split-photo.portrait{aspect-ratio:2/3}
 
-/* ─── SECTION TITLE ──────────────────────────── */
-.section-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2.2rem,7vw,4rem);
-  text-align:center;
-  margin-bottom:clamp(40px,7vh,80px);
-  color:var(--rose-d);
-  letter-spacing:0.02em;
-  position:relative;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-}
-.section-title::after{
-  content:'';display:block;
-  width:60px;height:2px;
-  background:linear-gradient(90deg,var(--rose),var(--mauve));
-  border-radius:4px;
-}
-
-/* ─── TIMELINE ───────────────────────────────── */
+/* ── TIMELINE ──────────────── */
 #memories{background:linear-gradient(to bottom,var(--cream),var(--rose-l))}
-
-.timeline{
-  position:relative;max-width:min(860px,100%);margin:auto;
-}
-.timeline-spine{
-  position:absolute;left:50%;top:0;
-  width:2px;height:100%;
-  background:linear-gradient(to bottom,var(--rose),var(--mauve));
-  transform:translateX(-50%);
-  border-radius:4px;
-}
-@media(max-width:640px){
-  .timeline-spine{left:18px;transform:none}
-}
-
-.tl-item{
-  position:relative;
-  display:grid;
-  grid-template-columns:1fr 48px 1fr;
-  align-items:center;
-  margin-bottom:clamp(24px,4vh,48px);
-}
-
-.tl-dot{
-  width:12px;height:12px;
-  background:var(--rose);border-radius:50%;
-  border:3px solid white;
-  box-shadow:0 0 0 3px var(--rose);
-  justify-self:center;
-  position:relative;z-index:2;
-  transition:transform 0.4s var(--ease),box-shadow 0.4s;
-}
-.tl-item:hover .tl-dot{
-  transform:scale(1.4);
-  box-shadow:0 0 0 6px rgba(232,160,184,0.3);
-}
-
-.tl-card{
-  background:var(--glass);
-  backdrop-filter:var(--blur);
-  -webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,0.8);
-  padding:clamp(16px,3vw,26px) clamp(18px,3.5vw,30px);
-  border-radius:var(--r);
-  box-shadow:var(--shadow-l);
-  transition:transform 0.4s var(--ease),box-shadow 0.4s;
-}
-.tl-card:hover{
-  transform:translateY(-4px);
-  box-shadow:var(--shadow);
-}
-.tl-card h3{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1.4rem,3vw,1.8rem);
-  color:var(--rose-d);margin-bottom:6px;
-}
-.tl-card p{
-  font-size:clamp(0.82rem,2vw,0.95rem);
-  line-height:1.8;color:var(--text-l);
-  font-weight:300;
-}
-
-/* left/right positioning */
+.timeline{position:relative;max-width:min(860px,100%);margin:auto}
+.timeline-spine{position:absolute;left:50%;top:0;width:2px;height:100%;background:linear-gradient(to bottom,var(--rose),var(--mauve),var(--rose));transform:translateX(-50%);border-radius:4px}
+.tl-item{position:relative;display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;margin-bottom:clamp(20px,3.5vh,40px)}
+.tl-dot{width:12px;height:12px;background:var(--rose);border-radius:50%;border:3px solid white;box-shadow:0 0 0 3px var(--rose);justify-self:center;position:relative;z-index:2;transition:transform 0.4s var(--ease),box-shadow 0.4s,background 0.4s}
+.tl-item:hover .tl-dot{transform:scale(1.5);box-shadow:0 0 0 7px rgba(232,160,184,0.25);background:var(--rose-d)}
+.tl-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.85);padding:clamp(13px,2.5vw,22px) clamp(14px,3vw,26px);border-radius:var(--r);box-shadow:var(--shadow-l);transition:transform 0.4s var(--ease),box-shadow 0.4s}
+.tl-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.tl-card h3{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,2.8vw,1.65rem);color:var(--rose-d);margin-bottom:4px}
+.tl-card p{font-size:clamp(0.78rem,1.9vw,0.9rem);line-height:1.8;color:var(--text-l);font-weight:300}
 .tl-item:nth-child(odd) .tl-card{grid-column:1;text-align:right}
 .tl-item:nth-child(even) .tl-card{grid-column:3}
-.tl-item:nth-child(odd) .tl-dot{grid-column:2;grid-row:1}
-.tl-item:nth-child(even) .tl-dot{grid-column:2;grid-row:1}
+.tl-item:nth-child(odd) .tl-dot,.tl-item:nth-child(even) .tl-dot{grid-column:2;grid-row:1}
 .tl-item:nth-child(odd) .tl-empty{grid-column:3}
 .tl-item:nth-child(even) .tl-empty{grid-column:1}
-
-/* mobile: stack left */
-@media(max-width:640px){
-  .timeline-spine{left:18px;transform:none}
-  .tl-item{
-    grid-template-columns:36px 1fr;
-    grid-template-rows:auto;
-  }
-  .tl-item:nth-child(odd) .tl-card,
-  .tl-item:nth-child(even) .tl-card{
-    grid-column:2;grid-row:1;text-align:left;
-  }
-  .tl-item:nth-child(odd) .tl-dot,
-  .tl-item:nth-child(even) .tl-dot{
-    grid-column:1;grid-row:1;justify-self:center;
-  }
+@media(max-width:600px){
+  .timeline-spine{left:16px;transform:none}
+  .tl-item{grid-template-columns:32px 1fr}
+  .tl-item:nth-child(odd) .tl-card,.tl-item:nth-child(even) .tl-card{grid-column:2;grid-row:1;text-align:left}
+  .tl-item:nth-child(odd) .tl-dot,.tl-item:nth-child(even) .tl-dot{grid-column:1;grid-row:1;justify-self:center}
   .tl-empty{display:none !important}
 }
 
-/* ─── GALLERY ────────────────────────────────── */
-#gallery{
-  background:linear-gradient(to bottom,var(--rose-l),var(--warm));
-}
+/* ── GALLERY ───────────────── */
+#gallery{background:linear-gradient(to bottom,var(--rose-l),var(--warm))}
+.gallery-masonry{columns:2;column-gap:clamp(10px,1.8vw,18px)}
+@media(min-width:700px){.gallery-masonry{columns:3}}
+@media(min-width:1100px){.gallery-masonry{columns:4}}
+.gm-item{break-inside:avoid;margin-bottom:clamp(10px,1.8vw,18px);position:relative;overflow:hidden;border-radius:var(--r);box-shadow:var(--shadow-l);cursor:pointer;background:linear-gradient(135deg,var(--rose-l),var(--warm))}
+.gm-item img{width:100%;display:block;transition:transform 0.65s var(--ease)}
+.gm-item:hover img{transform:scale(1.06)}
+.gm-item .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:clamp(1.4rem,3.5vw,2rem);color:var(--rose-d)}
+.gm-item .ph span{font-family:'Cormorant Garamond',serif;font-size:clamp(0.7rem,1.7vw,0.82rem);letter-spacing:0.1em;text-transform:uppercase;color:var(--text-l)}
+.gm-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(107,47,70,0.52),transparent 55%);opacity:0;transition:opacity 0.4s;display:flex;align-items:flex-end;padding:12px}
+.gm-item:hover .gm-overlay{opacity:1}
+.gm-overlay span{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.88rem;color:rgba(255,255,255,0.9);letter-spacing:0.04em}
 
-.gallery-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));
-  gap:clamp(12px,2.5vw,22px);
-}
+/* ── PHOTO STRIP ───────────── */
+.photo-strip{overflow-x:auto;display:flex;gap:clamp(10px,1.8vw,16px);padding:clamp(22px,3.5vw,36px) clamp(18px,5.5vw,72px);scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.photo-strip::-webkit-scrollbar{display:none}
+.photo-strip .ps-item{flex:0 0 auto;width:clamp(170px,34vw,260px);aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;scroll-snap-align:start;box-shadow:var(--shadow-l);cursor:pointer;position:relative;background:linear-gradient(135deg,var(--rose-l),var(--warm))}
+.photo-strip .ps-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s var(--ease)}
+.photo-strip .ps-item:hover img{transform:scale(1.07)}
+.photo-strip .ps-item .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:clamp(1.3rem,3.5vw,1.8rem);color:var(--rose-d)}
+.photo-strip .ps-item .ph span{font-family:'Cormorant Garamond',serif;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-l)}
+.strip-label{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(0.82rem,2vw,0.96rem);color:var(--text-l);padding:0 clamp(18px,5.5vw,72px) clamp(18px,2.8vh,32px);letter-spacing:0.05em}
 
-.gallery-item{
-  position:relative;overflow:hidden;
-  border-radius:var(--r);
-  aspect-ratio:3/4;
-  background:linear-gradient(135deg,var(--rose-l),var(--warm));
-  box-shadow:var(--shadow-l);
-  transition:transform 0.5s var(--ease),box-shadow 0.5s;
-}
-.gallery-item:hover{
-  transform:scale(1.03) translateY(-4px);
-  box-shadow:var(--shadow);
-}
-.gallery-item img{
-  width:100%;height:100%;
-  object-fit:cover;
-  transition:transform 0.6s var(--ease),filter 0.4s;
-}
-.gallery-item:hover img{transform:scale(1.07);filter:brightness(1.05) saturate(1.1)}
-
-.gallery-placeholder{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:10px;color:var(--rose-d);
-  font-size:clamp(1.5rem,5vw,2.5rem);
-}
-.gallery-placeholder span{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(0.75rem,2vw,0.9rem);
-  color:var(--text-l);letter-spacing:0.1em;text-transform:uppercase;
-}
-
-/* ─── LOVE CARDS ─────────────────────────────── */
-#love{
-  background:linear-gradient(to bottom,var(--warm),var(--cream));
-}
-
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));
-  gap:clamp(14px,2.5vw,22px);
-}
-
-.love-card{
-  background:var(--glass);
-  backdrop-filter:var(--blur);
-  -webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,0.8);
-  padding:clamp(20px,3.5vw,30px);
-  border-radius:var(--r);
-  box-shadow:var(--shadow-l);
-  transition:transform 0.4s var(--ease),box-shadow 0.4s;
-  position:relative;overflow:hidden;
-}
-.love-card::before{
-  content:'';position:absolute;
-  inset:0;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(232,160,184,0.08),rgba(195,160,200,0.06));
-  opacity:0;transition:opacity 0.4s;
-}
+/* ── LOVE CARDS ────────────── */
+#love{background:linear-gradient(to bottom,var(--warm),var(--cream))}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:clamp(12px,2vw,18px)}
+.love-card{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.85);padding:clamp(16px,3.2vw,26px);border-radius:var(--r);box-shadow:var(--shadow-l);transition:transform 0.4s var(--ease),box-shadow 0.4s;position:relative;overflow:hidden}
+.love-card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(232,160,184,0.08),rgba(195,160,200,0.05));opacity:0;transition:opacity 0.4s}
 .love-card:hover{transform:translateY(-8px);box-shadow:var(--shadow)}
 .love-card:hover::before{opacity:1}
+.love-card .num{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,4vw,2.3rem);color:rgba(232,160,184,0.38);font-style:italic;line-height:1;margin-bottom:8px;display:block}
+.love-card p{font-size:clamp(0.8rem,1.9vw,0.9rem);line-height:1.85;color:var(--text);font-weight:300}
+.shimmer-line{width:26px;height:2px;margin-bottom:10px;background:linear-gradient(90deg,var(--rose),var(--mauve));border-radius:4px}
 
-.love-card .num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2rem,5vw,2.6rem);
-  color:rgba(232,160,184,0.45);
-  font-style:italic;line-height:1;
-  margin-bottom:10px;
-  display:block;
-}
-.love-card p{
-  font-size:clamp(0.82rem,2vw,0.93rem);
-  line-height:1.85;color:var(--text);
-  font-weight:300;
-}
-.shimmer-line{
-  width:30px;height:2px;margin-bottom:12px;
-  background:linear-gradient(90deg,var(--rose),var(--mauve));
-  border-radius:4px;
-}
+/* ── LETTER ────────────────── */
+#letter-section{background:radial-gradient(ellipse at 50% 30%,rgba(232,160,184,0.1),transparent 60%),linear-gradient(to bottom,var(--cream),var(--rose-l))}
+.letter-layout{display:grid;gap:clamp(22px,3.5vw,38px);max-width:min(960px,100%);margin:auto}
+@media(min-width:780px){.letter-layout{grid-template-columns:1fr 1.7fr;align-items:start}}
+.letter-photo-col{display:flex;flex-direction:column;gap:clamp(12px,1.8vw,18px)}
+.letter-side-photo{border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;position:relative;background:linear-gradient(135deg,var(--rose-l),var(--warm))}
+.letter-side-photo img{width:100%;display:block;transition:transform 0.6s var(--ease)}
+.letter-side-photo:hover img{transform:scale(1.05)}
+.letter-side-photo .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:1.8rem;color:var(--rose-d)}
+.letter-side-photo .ph span{font-size:0.78rem;font-family:'Cormorant Garamond',serif;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-l)}
+.letter-wrap{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.9);border-radius:clamp(18px,3.5vw,34px);padding:clamp(26px,5vw,60px) clamp(20px,5.5vw,65px);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,0.9);position:relative;overflow:hidden}
+.letter-wrap::before{content:'';position:absolute;top:-55px;right:-55px;width:180px;height:180px;background:radial-gradient(circle,rgba(232,160,184,0.13),transparent 70%);border-radius:50%;pointer-events:none}
+.letter-salutation{font-family:'Pinyon Script',cursive;font-size:clamp(2.2rem,7vw,4.2rem);color:var(--rose-d);margin-bottom:clamp(16px,3vh,28px);display:block}
+.letter-body{font-family:'Cormorant Garamond',serif;font-size:clamp(0.96rem,2.4vw,1.15rem);line-height:2.2;color:var(--text);font-weight:400}
+.letter-highlight{font-weight:600;color:var(--rose-d);font-style:italic;font-size:clamp(1rem,2.6vw,1.25rem)}
+.letter-sign{margin-top:clamp(20px,3.5vh,35px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.letter-sign::before{content:'';display:block;flex:1;height:1px;min-width:28px;background:linear-gradient(to right,transparent,var(--rose))}
+.letter-sign span{font-family:'Pinyon Script',cursive;font-size:clamp(1.5rem,4.5vw,2.3rem);color:var(--rose-d)}
 
-/* ─── LETTER ─────────────────────────────────── */
-#letter-section{
-  background:radial-gradient(ellipse at 50% 30%,rgba(232,160,184,0.12),transparent 60%),
-             linear-gradient(to bottom,var(--cream),var(--rose-l));
-}
+/* ── DREAM ─────────────────── */
+#dream{min-height:65svh;display:flex;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at 25% 40%,rgba(232,160,184,0.32),transparent 55%),radial-gradient(ellipse at 75% 60%,rgba(195,160,200,0.26),transparent 50%),linear-gradient(135deg,var(--rose-l),var(--warm),var(--cream));overflow:hidden;position:relative}
+.dream-inner{max-width:min(720px,90vw);position:relative;z-index:2;padding:clamp(34px,7vw,68px);background:rgba(255,255,255,0.4);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.78);border-radius:clamp(22px,5vw,48px);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.5vw,20px)}
+.dream-eyebrow{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--rose);font-weight:500}
+.dream-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5.5vw,3.2rem);color:var(--text);line-height:1.25;font-weight:500}
+.dream-para{font-size:clamp(0.86rem,2.1vw,1rem);line-height:2;color:var(--text-l);font-weight:300}
+.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(40px);animation:orbFloat linear infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0)}33%{transform:translate(28px,-20px)}66%{transform:translate(-20px,14px)}}
 
-.letter-wrap{
-  max-width:min(820px,100%);margin:auto;
-  background:var(--glass);
-  backdrop-filter:var(--blur);
-  -webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,0.85);
-  border-radius:clamp(20px,4vw,36px);
-  padding:clamp(30px,6vw,70px) clamp(24px,7vw,80px);
-  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,0.9);
-  position:relative;overflow:hidden;
-}
-.letter-wrap::before{
-  content:'';position:absolute;top:-60px;right:-60px;
-  width:200px;height:200px;
-  background:radial-gradient(circle,rgba(232,160,184,0.15),transparent 70%);
-  border-radius:50%;pointer-events:none;
-}
-.letter-wrap::after{
-  content:'';position:absolute;bottom:-40px;left:-40px;
-  width:160px;height:160px;
-  background:radial-gradient(circle,rgba(195,160,200,0.12),transparent 70%);
-  border-radius:50%;pointer-events:none;
-}
-
-.letter-salutation{
-  font-family:'Pinyon Script',cursive;
-  font-size:clamp(2.5rem,8vw,4.5rem);
-  color:var(--rose-d);
-  margin-bottom:clamp(20px,4vh,36px);
-  display:block;
-}
-.letter-body{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(1rem,2.5vw,1.2rem);
-  line-height:2.2;color:var(--text);
-  font-weight:400;
-}
-.letter-body br{margin:0}
-.letter-highlight{
-  font-weight:600;color:var(--rose-d);
-  font-style:italic;
-  font-size:clamp(1.05rem,2.8vw,1.3rem);
-}
-.letter-sign{
-  margin-top:clamp(24px,4vh,40px);
-  display:flex;align-items:center;gap:12px;
-  flex-wrap:wrap;
-}
-.letter-sign::before{
-  content:'';display:block;
-  flex:1;height:1px;min-width:30px;
-  background:linear-gradient(to right,transparent,var(--rose));
-}
-.letter-sign span{
-  font-family:'Pinyon Script',cursive;
-  font-size:clamp(1.6rem,5vw,2.5rem);
-  color:var(--rose-d);
-}
-
-/* ─── DREAM SECTION ──────────────────────────── */
-#dream{
-  min-height:70svh;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-  background:
-    radial-gradient(ellipse at 25% 40%,rgba(232,160,184,0.35) 0%,transparent 55%),
-    radial-gradient(ellipse at 75% 60%,rgba(195,160,200,0.3) 0%,transparent 50%),
-    linear-gradient(135deg,var(--rose-l),var(--warm),var(--cream));
-  overflow:hidden;position:relative;
-}
-
-#dream .dream-inner{
-  max-width:min(760px,92vw);
-  position:relative;z-index:2;
-  padding:clamp(40px,8vw,80px);
-  background:rgba(255,255,255,0.4);
-  backdrop-filter:var(--blur);
-  -webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,0.75);
-  border-radius:clamp(24px,5vw,50px);
-  box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;gap:clamp(16px,3vw,24px);
-}
-
-.dream-eyebrow{
-  font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--rose);font-weight:500;
-}
-.dream-heading{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(2rem,6vw,3.5rem);
-  color:var(--text);line-height:1.25;
-  font-weight:500;
-}
-.dream-para{
-  font-size:clamp(0.88rem,2.2vw,1.05rem);
-  line-height:2;color:var(--text-l);
-  font-weight:300;
-}
-
-/* floating orbs */
-.orb{
-  position:absolute;border-radius:50%;
-  pointer-events:none;filter:blur(40px);
-  animation:orbFloat linear infinite;
-}
-@keyframes orbFloat{
-  0%,100%{transform:translate(0,0)}
-  33%{transform:translate(30px,-20px)}
-  66%{transform:translate(-20px,15px)}
-}
-
-/* ─── FINAL ──────────────────────────────────── */
+/* ── FINAL ─────────────────── */
 #final{
-  min-height:100svh;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;
-  background:
-    radial-gradient(ellipse at 50% 20%,rgba(212,168,85,0.12),transparent 55%),
-    linear-gradient(to top,rgba(232,160,184,0.15),rgba(253,246,240,0.9),var(--cream));
-  padding:clamp(40px,8vw,100px) clamp(20px,6vw,60px);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(ellipse at 50% 20%,rgba(212,168,85,0.1),transparent 55%),
+             linear-gradient(to top,rgba(232,160,184,0.16),rgba(253,246,240,0.9),var(--cream));
+  padding:clamp(70px,12vh,130px) clamp(22px,5vw,55px);
+  overflow:hidden;position:relative
+}
+.final-photo-ring{display:flex;justify-content:center;align-items:center}
+.final-photo-ring .fp{
+  width:clamp(58px,12vw,82px);
+  aspect-ratio:1/1;
+  border-radius:50%;
   overflow:hidden;
+  border:3px solid white;
+  box-shadow:0 6px 20px rgba(180,100,130,0.18);
+  cursor:pointer;
+  position:relative;
+  background:linear-gradient(135deg,var(--rose-l),var(--warm));
+  flex-shrink:0;
+  transition:transform 0.4s var(--ease)
 }
+.final-photo-ring .fp+.fp{margin-left:clamp(-16px,-3vw,-8px)}
+.final-photo-ring .fp img{width:100%;height:100%;object-fit:cover;display:block}
+.final-photo-ring .fp:nth-child(1){transform:rotate(-6deg) translateY(6px)}
+.final-photo-ring .fp:nth-child(2){transform:rotate(-1deg) translateY(2px);z-index:2}
+.final-photo-ring .fp:nth-child(3){transform:rotate(4deg) translateY(-4px);z-index:3}
+.final-photo-ring .fp:nth-child(4){transform:rotate(9deg) translateY(5px);z-index:2}
+.final-photo-ring .fp:hover{transform:translateY(-10px) scale(1.12) rotate(0deg);z-index:10}
 
-.final-inner{
-  max-width:min(700px,92vw);
-  display:flex;flex-direction:column;align-items:center;gap:clamp(20px,4vh,36px);
-}
-
-.confetti-wrap{
-  display:flex;gap:8px;font-size:clamp(1.5rem,5vw,2.5rem);
-  animation:confettiBounce 2.5s ease-in-out infinite;
-}
-@keyframes confettiBounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-12px)}
-}
-
-.final-quote{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-  font-size:clamp(1.3rem,4.5vw,2.1rem);
-  color:var(--text);line-height:1.7;
-  font-weight:300;
-}
-
+.final-inner{max-width:min(520px,92vw);display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.8vh,22px);width:100%}
+.confetti-wrap{display:flex;gap:clamp(6px,1.5vw,10px);font-size:clamp(1.3rem,4vw,2rem);animation:confettiBounce 2.5s ease-in-out infinite}
+@keyframes confettiBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.final-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1rem,3.2vw,1.55rem);color:var(--text);line-height:1.85;font-weight:300;max-width:100%}
 .final-name{
   font-family:'Pinyon Script',cursive;
-  font-size:clamp(3.5rem,12vw,7rem);
+  font-size:clamp(1.9rem,7.5vw,4.8rem);
   color:var(--rose-d);
-  text-shadow:0 4px 24px rgba(197,114,143,0.2);
+  text-shadow:0 4px 26px rgba(197,114,143,0.2);
+  line-height:1.15;
+  white-space:nowrap;max-width:100%;overflow:hidden
 }
+.final-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,2.5vw,1.1rem);color:var(--text-l);letter-spacing:0.08em;font-style:italic}
+.final-heart{font-size:clamp(1.5rem,4vw,2rem);animation:heartBeat 1.4s ease-in-out infinite}
+@keyframes heartBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.28)}28%{transform:scale(1)}42%{transform:scale(1.14)}70%{transform:scale(1)}}
 
-.final-heart{
-  font-size:clamp(1.8rem,5vw,2.5rem);
-  animation:heartBeat 1.4s ease-in-out infinite;
+@media(max-width:400px){
+  .section{padding-left:14px;padding-right:14px}
+  .split-row{padding-left:14px;padding-right:14px}
+  .photo-strip{padding-left:14px;padding-right:14px}
 }
-@keyframes heartBeat{
-  0%,100%{transform:scale(1)}
-  14%{transform:scale(1.25)}
-  28%{transform:scale(1)}
-  42%{transform:scale(1.15)}
-  70%{transform:scale(1)}
-}
-
-/* ─── REVEAL ANIMATIONS ──────────────────────── */
-.reveal{
-  opacity:0;transform:translateY(40px);
-  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease);
-}
-.reveal.visible{opacity:1;transform:none}
-
-.reveal-left{
-  opacity:0;transform:translateX(-40px);
-  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease);
-}
-.reveal-left.visible{opacity:1;transform:none}
-
-.reveal-right{
-  opacity:0;transform:translateX(40px);
-  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease);
-}
-.reveal-right.visible{opacity:1;transform:none}
-
-.reveal-scale{
-  opacity:0;transform:scale(0.9);
-  transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);
-}
-.reveal-scale.visible{opacity:1;transform:scale(1)}
-
-/* stagger delay helpers */
-.d1{transition-delay:0.05s}
-.d2{transition-delay:0.12s}
-.d3{transition-delay:0.19s}
-.d4{transition-delay:0.26s}
-.d5{transition-delay:0.33s}
-
-/* ─── MARQUEE RIBBON ─────────────────────────── */
-.marquee-ribbon{
-  overflow:hidden;
-  padding:clamp(14px,2.5vw,22px) 0;
-  background:var(--rose-d);
-  display:flex;gap:0;white-space:nowrap;
-  position:relative;z-index:3;
-}
-.marquee-track{
-  display:flex;gap:0;
-  animation:marqueeScroll 20s linear infinite;
-  will-change:transform;
-}
-.marquee-track + .marquee-track{animation-delay:-10s}
-@keyframes marqueeScroll{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
-.marquee-item{
-  padding:0 clamp(20px,4vw,40px);
-  font-size:clamp(0.7rem,1.8vw,0.9rem);
-  letter-spacing:0.2em;text-transform:uppercase;
-  color:rgba(255,255,255,0.85);
-  font-weight:400;display:flex;align-items:center;gap:14px;
-}
-.marquee-item::after{
-  content:'✦';color:rgba(255,255,255,0.4);font-size:0.6em;
-}
-
-/* ─── SPARKLE EFFECT ─────────────────────────── */
-.sparkle{
-  position:fixed;pointer-events:none;z-index:998;
-  width:6px;height:6px;
-  background:var(--rose);
-  border-radius:50%;
-  animation:sparkleAnim 0.6s var(--ease) forwards;
-}
-@keyframes sparkleAnim{
-  0%{opacity:1;transform:scale(1) translate(0,0)}
-  100%{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}
-}
-
-/* ─── TOOLTIP / FUN FACT ─────────────────────── */
-.fun-fact{
-  text-align:center;
-  padding:clamp(20px,4vw,36px);
-  background:linear-gradient(135deg,rgba(232,160,184,0.15),rgba(195,160,200,0.12));
-  border:1px solid rgba(232,160,184,0.25);
-  border-radius:var(--r);
-  margin-top:clamp(40px,6vh,70px);
-}
-.fun-fact p{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;
-  font-size:clamp(1rem,2.5vw,1.25rem);
-  line-height:1.8;color:var(--text);
-}
-
 </style>
 </head>
 <body>
 
-<!-- PROGRESS BAR -->
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lb-close">✕</button>
+  <button id="lb-prev">‹</button>
+  <img id="lb-img" src="" alt=""/>
+  <button id="lb-next">›</button>
+  <div id="lb-counter"></div>
+</div>
+
 <div id="progress"></div>
-
-<!-- CANVAS BACKGROUND -->
 <canvas id="canvas-bg"></canvas>
-
-<!-- PETALS -->
 <div id="petals"></div>
-
-<!-- MUSIC BUTTON -->
 <button id="music-btn" aria-label="Toggle music">🎵</button>
-<audio id="bgMusic" loop>
-  <source src="YOUR-MUSIC.mp3" type="audio/mpeg">
-</audio>
+<audio id="bgMusic" loop><source src="YOUR-MUSIC.mp3" type="audio/mpeg"></audio>
 
 <main>
 
-<!-- ── INTRO ─────────────────────────────────── -->
+<!-- ══ INTRO ══════════════════ -->
 <section id="intro" class="section">
   <div class="intro-inner">
-    <span class="badge">🌸 &nbsp; June 2026 &nbsp; 🌸</span>
+    <span class="badge">🌸 &nbsp; June 10, 2026 &nbsp; 🌸</span>
     <h1 class="intro-name">Cutie Pie</h1>
     <p class="intro-sub">
       A story written with love, memories, laughter,<br>
@@ -728,294 +359,308 @@ main{position:relative;z-index:3}
   </div>
 </section>
 
-<!-- ── MARQUEE ────────────────────────────────── -->
+<!-- ══ MARQUEE 1 ══════════════ -->
 <div class="marquee-ribbon" aria-hidden="true">
   <div class="marquee-track">
-    <span class="marquee-item">Happy Birthday</span>
-    <span class="marquee-item">15 Years of Magic</span>
-    <span class="marquee-item">You Are Loved</span>
-    <span class="marquee-item">Always & Forever</span>
-    <span class="marquee-item">Cutie Pie</span>
-    <span class="marquee-item">Happy Birthday</span>
-    <span class="marquee-item">15 Years of Magic</span>
-    <span class="marquee-item">You Are Loved</span>
-    <span class="marquee-item">Always & Forever</span>
-    <span class="marquee-item">Cutie Pie</span>
+    <span class="marquee-item">Happy Birthday</span><span class="marquee-item">15 Years of Magic</span>
+    <span class="marquee-item">You Are Loved</span><span class="marquee-item">Always &amp; Forever</span>
+    <span class="marquee-item">Cutie Pie</span><span class="marquee-item">Happy Birthday</span>
+    <span class="marquee-item">15 Years of Magic</span><span class="marquee-item">You Are Loved</span>
+    <span class="marquee-item">Always &amp; Forever</span><span class="marquee-item">Cutie Pie</span>
   </div>
   <div class="marquee-track" aria-hidden="true">
-    <span class="marquee-item">Happy Birthday</span>
-    <span class="marquee-item">15 Years of Magic</span>
-    <span class="marquee-item">You Are Loved</span>
-    <span class="marquee-item">Always & Forever</span>
-    <span class="marquee-item">Cutie Pie</span>
-    <span class="marquee-item">Happy Birthday</span>
-    <span class="marquee-item">15 Years of Magic</span>
-    <span class="marquee-item">You Are Loved</span>
-    <span class="marquee-item">Always & Forever</span>
-    <span class="marquee-item">Cutie Pie</span>
+    <span class="marquee-item">Happy Birthday</span><span class="marquee-item">15 Years of Magic</span>
+    <span class="marquee-item">You Are Loved</span><span class="marquee-item">Always &amp; Forever</span>
+    <span class="marquee-item">Cutie Pie</span><span class="marquee-item">Happy Birthday</span>
+    <span class="marquee-item">15 Years of Magic</span><span class="marquee-item">You Are Loved</span>
+    <span class="marquee-item">Always &amp; Forever</span><span class="marquee-item">Cutie Pie</span>
   </div>
 </div>
 
-<!-- ── HERO ──────────────────────────────────── -->
+<!-- ══ HERO ═══════════════════ -->
 <section id="hero" class="section">
   <div class="hero-inner">
-    <p class="hero-tag reveal">Today is your day ✨</p>
-    <h2 class="hero-big reveal d1">Happy Birthday</h2>
-    <div class="hero-line reveal d2"></div>
-    <h3 class="hero-title reveal d3">15th Birthday, Cutie Pie</h3>
-    <p class="hero-para reveal d4">
+    <p class="hero-tag rv">She's turning 15 ✨</p>
+    <h2 class="hero-big rv d1">Happy Birthday</h2>
+    <div class="hero-line rv d2"></div>
+    <h3 class="hero-title rv d3">15th Birthday, Cutie Pie</h3>
+    <p class="hero-para rv d4">
       Fifteen years of love, laughter, and dreams.<br>
-      A heart that made every single day brighter.
+      A heart that made every single day brighter.<br>
       You are one of the most precious parts of my story.
     </p>
   </div>
 </section>
 
-<!-- ── TIMELINE ───────────────────────────────── -->
-<section id="memories" class="section">
-  <h2 class="section-title reveal">Childhood Memories</h2>
+<!-- ══ COUNTDOWN ══════════════ -->
+<section id="countdown" class="section">
+  <div class="cd-wrap rv-s">
+    <span class="cd-eyebrow">✦ &nbsp; Counting down to her day &nbsp; ✦</span>
+    <h2 class="cd-heading">Time Until She Turns 15</h2>
+    <p class="cd-date">June 10, 2026</p>
 
+    <div class="cd-boxes">
+      <div class="cd-box">
+        <span class="cd-num" id="cd-days">--</span>
+        <span class="cd-lbl">Days</span>
+      </div>
+      <span class="cd-sep" aria-hidden="true">:</span>
+      <div class="cd-box">
+        <span class="cd-num" id="cd-hours">--</span>
+        <span class="cd-lbl">Hours</span>
+      </div>
+      <span class="cd-sep" aria-hidden="true">:</span>
+      <div class="cd-box">
+        <span class="cd-num" id="cd-mins">--</span>
+        <span class="cd-lbl">Mins</span>
+      </div>
+      <span class="cd-sep" aria-hidden="true">:</span>
+      <div class="cd-box">
+        <span class="cd-num" id="cd-secs">--</span>
+        <span class="cd-lbl">Secs</span>
+      </div>
+    </div>
+
+    <div class="cd-divider"></div>
+
+    <div class="cd-total-wrap">
+      <span class="cd-total-lbl">Total seconds remaining</span>
+      <span class="cd-total-num" id="cd-total">--------</span>
+      <span class="cd-total-sub">⏱ every second counts</span>
+    </div>
+
+    <div class="cd-divider"></div>
+
+    <div class="lived-card">
+      <span class="lived-eyebrow">She has graced this world for…</span>
+      <div class="lived-row">
+        <div class="lived-unit">
+          <span class="lived-val" id="lv-days">--</span>
+          <span class="lived-lbl">Days</span>
+        </div>
+        <span class="lived-sep">·</span>
+        <div class="lived-unit">
+          <span class="lived-val" id="lv-hrs">--</span>
+          <span class="lived-lbl">Hours</span>
+        </div>
+        <span class="lived-sep">·</span>
+        <div class="lived-unit">
+          <span class="lived-val" id="lv-min">--</span>
+          <span class="lived-lbl">Mins</span>
+        </div>
+        <span class="lived-sep">·</span>
+        <div class="lived-unit">
+          <span class="lived-val" id="lv-sec">--</span>
+          <span class="lived-lbl">Secs</span>
+        </div>
+      </div>
+      <p class="lived-poem">of sunshine, laughter &amp; beautiful love 🌸</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PHOTO ROW 1 ════════════ -->
+<div class="split-row three">
+  <div class="split-photo tall rv-l d1" data-lb="2">
+    <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo1.jpg" alt="Memory">
+    <div class="ph">🌸<span>Memory</span></div>
+  </div>
+  <div class="split-photo portrait rv d2" data-lb="3">
+    <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo2.jpg" alt="Memory">
+    <div class="ph">💕<span>Memory</span></div>
+  </div>
+  <div class="split-photo tall rv-r d3" data-lb="4">
+    <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo3.jpg" alt="Memory">
+    <div class="ph">🌷<span>Memory</span></div>
+  </div>
+</div>
+
+<!-- ══ TIMELINE ═══════════════ -->
+<section id="memories" class="section">
+  <h2 class="section-title rv">Childhood Memories</h2>
   <div class="timeline">
     <div class="timeline-spine"></div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2011</h3><p>The year our little sunshine came into the world — and everything became warmer.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2012</h3><p>Tiny hands, tiny footsteps, and a heart already full of magic.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2013</h3><p>Every single laugh sounded like happiness itself.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2014</h3><p>Dolls, cartoons, chocolates, and endless innocent smiles.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2015</h3><p>The little girl who made ordinary days feel extraordinary.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2016</h3><p>A childhood filled with sparkle, wonder, and the biggest dreams.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2017</h3><p>Slowly growing, yet still holding the purest, most beautiful heart.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2018</h3><p>Learning, laughing, dreaming — and becoming someone remarkable.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2019</h3><p>The years may change… but your smile never once lost its light.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2020</h3><p>Even during the hardest days, you stayed beautifully brave.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2021</h3><p>A heart growing softer, wiser, and stronger — all at once.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2022</h3><p>Blooming like a flower no storm in the world could destroy.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2023</h3><p>Turning into someone truly, genuinely inspiring.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2024</h3><p>More graceful. More confident. More breathtakingly beautiful.</p></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-card reveal-left"><h3>2025</h3><p>Carrying dreams bigger and brighter than all the stars.</p></div>
-      <div class="tl-dot"></div><div class="tl-empty"></div>
-    </div>
-
-    <div class="tl-item">
-      <div class="tl-empty"></div>
-      <div class="tl-dot"></div>
-      <div class="tl-card reveal-right"><h3>2026 ✨</h3><p>Fifteen years of memories — and a whole lifetime of beautiful chapters still ahead.</p></div>
-    </div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2011</h3><p>The year our little sunshine came into the world — and everything became warmer.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2012</h3><p>Tiny hands, tiny footsteps, and a heart already full of magic.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2013</h3><p>Every single laugh sounded like happiness itself.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2014</h3><p>Dolls, cartoons, chocolates, and endless innocent smiles.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2015</h3><p>The little girl who made ordinary days feel extraordinary.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2016</h3><p>A childhood filled with sparkle, wonder, and the biggest dreams.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2017</h3><p>Slowly growing, yet still holding the purest, most beautiful heart.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2018</h3><p>Learning, laughing, dreaming — and becoming someone remarkable.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2019</h3><p>The years may change… but your smile never once lost its light.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2020</h3><p>Even during the hardest days, you stayed beautifully brave.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2021</h3><p>A heart growing softer, wiser, and stronger — all at once.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2022</h3><p>Blooming like a flower no storm in the world could destroy.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2023</h3><p>Turning into someone truly, genuinely inspiring.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2024</h3><p>More graceful. More confident. More breathtakingly beautiful.</p></div></div>
+    <div class="tl-item"><div class="tl-card rv-l"><h3>2025</h3><p>Carrying dreams bigger and brighter than all the stars.</p></div><div class="tl-dot"></div><div class="tl-empty"></div></div>
+    <div class="tl-item"><div class="tl-empty"></div><div class="tl-dot"></div><div class="tl-card rv-r"><h3>2026 ✨</h3><p>Fifteen years of memories — and a whole lifetime of beautiful chapters ahead.</p></div></div>
   </div>
 </section>
 
-<!-- ── GALLERY ────────────────────────────────── -->
+<!-- ══ PHOTO STRIP ════════════ -->
+<div class="photo-strip" id="photoStrip">
+  <div class="ps-item" data-lb="0"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo7.jpg" alt=""><div class="ph">🧸<span>Memory</span></div></div>
+  <div class="ps-item" data-lb="1"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo8.jpg" alt=""><div class="ph">🌈<span>Memory</span></div></div>
+  <div class="ps-item" data-lb="2"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo1.jpg" alt=""><div class="ph">🌸<span>Portrait</span></div></div>
+  <div class="ps-item" data-lb="3"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo2.jpg" alt=""><div class="ph">💕<span>Portrait</span></div></div>
+  <div class="ps-item" data-lb="4"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo3.jpg" alt=""><div class="ph">🌷<span>Together</span></div></div>
+  <div class="ps-item" data-lb="5"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo4.jpg" alt=""><div class="ph">✨<span>Together</span></div></div>
+  <div class="ps-item" data-lb="6"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo5.jpg" alt=""><div class="ph">🎀<span>Together</span></div></div>
+  <div class="ps-item" data-lb="7"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo6.jpg" alt=""><div class="ph">🌼<span>Together</span></div></div>
+  <div class="ps-item" data-lb="8"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo10.jpg" alt=""><div class="ph">💖<span>Memory</span></div></div>
+</div>
+<p class="strip-label rv">← Swipe through all our memories →</p>
+
+<!-- ══ GALLERY ════════════════ -->
 <section id="gallery" class="section">
-  <h2 class="section-title reveal">Our Beautiful Memories</h2>
-
-  <div class="gallery-grid">
-
-    <div class="gallery-item reveal d1">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo7.jpg" alt="Childhood Memory 1" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🧸<span>Childhood</span></div>
-    </div>
-
-    <div class="gallery-item reveal d2">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo8.jpg" alt="Childhood Memory 2" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🌈<span>Childhood</span></div>
-    </div>
-
-    <div class="gallery-item reveal d3">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo1.jpg" alt="Portrait 1" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🌸<span>Portrait</span></div>
-    </div>
-
-    <div class="gallery-item reveal d4">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo2.jpg" alt="Portrait 2" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">💕<span>Portrait</span></div>
-    </div>
-
-    <div class="gallery-item reveal d5">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo3.jpg" alt="Together Memory 1" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🌷<span>Together</span></div>
-    </div>
-
-    <div class="gallery-item reveal" style="transition-delay:0.4s">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo4.jpg" alt="Together Memory 2" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">✨<span>Together</span></div>
-    </div>
-
-    <div class="gallery-item reveal" style="transition-delay:0.5s">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo5.jpg" alt="Together Memory 3" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🎀<span>Together</span></div>
-    </div>
-
-    <div class="gallery-item reveal" style="transition-delay:0.6s">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo6.jpg" alt="Together Memory 4" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🌼<span>Together</span></div>
-    </div>
-
-    <div class="gallery-item reveal" style="transition-delay:0.7s">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo9.jpg" alt="Memory" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">💖<span>Memory</span></div>
-    </div>
-
-    <div class="gallery-item reveal" style="transition-delay:0.8s">
-      <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo10.jpg" alt="Portrait 3" onerror="this.style.display='none'">
-      <div class="gallery-placeholder">🌹<span>Portrait</span></div>
-    </div>
-
+  <h2 class="section-title rv">Our Beautiful Memories</h2>
+  <div class="gallery-masonry">
+    <div class="gm-item rv d1" data-lb="2"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo1.jpg" alt="Memory 1"><div class="ph">🌸<span>Memory</span></div><div class="gm-overlay"><span>A beautiful memory ✨</span></div></div>
+    <div class="gm-item rv d2" data-lb="3"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo2.jpg" alt="Memory 2"><div class="ph">💕<span>Memory</span></div><div class="gm-overlay"><span>Always smiling 🌸</span></div></div>
+    <div class="gm-item rv d3" data-lb="4"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo3.jpg" alt="Memory 3"><div class="ph">🌷<span>Memory</span></div><div class="gm-overlay"><span>Together forever 💕</span></div></div>
+    <div class="gm-item rv d4" data-lb="5"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo4.jpg" alt="Memory 4"><div class="ph">✨<span>Memory</span></div><div class="gm-overlay"><span>Pure magic ✦</span></div></div>
+    <div class="gm-item rv d5" data-lb="6"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo5.jpg" alt="Memory 5"><div class="ph">🎀<span>Memory</span></div><div class="gm-overlay"><span>Unforgettable 🎀</span></div></div>
+    <div class="gm-item rv d6" data-lb="7"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo6.jpg" alt="Memory 6"><div class="ph">🌼<span>Memory</span></div><div class="gm-overlay"><span>So precious 🌼</span></div></div>
+    <div class="gm-item rv d7" data-lb="0"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo7.jpg" alt="Memory 7"><div class="ph">🧸<span>Childhood</span></div><div class="gm-overlay"><span>Childhood days 🧸</span></div></div>
+    <div class="gm-item rv d8" data-lb="1"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo8.jpg" alt="Memory 8"><div class="ph">🌈<span>Childhood</span></div><div class="gm-overlay"><span>Rainbow days 🌈</span></div></div>
+    <div class="gm-item rv d1" data-lb="8"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo10.jpg" alt="Memory 9"><div class="ph">🌹<span>Portrait</span></div><div class="gm-overlay"><span>Beautiful, always 🌹</span></div></div>
   </div>
 </section>
 
-<!-- ── 15 THINGS ──────────────────────────────── -->
+<!-- ══ MARQUEE 2 ══════════════ -->
+<div class="marquee-ribbon" aria-hidden="true" style="background:var(--mauve-d)">
+  <div class="marquee-track" style="animation-direction:reverse">
+    <span class="marquee-item">My Favourite Person</span><span class="marquee-item">Fifteen Candles</span>
+    <span class="marquee-item">You Are My World</span><span class="marquee-item">Growing Up So Fast</span>
+    <span class="marquee-item">My Little Sister</span><span class="marquee-item">My Favourite Person</span>
+    <span class="marquee-item">Fifteen Candles</span><span class="marquee-item">You Are My World</span>
+    <span class="marquee-item">Growing Up So Fast</span><span class="marquee-item">My Little Sister</span>
+  </div>
+  <div class="marquee-track" style="animation-direction:reverse;animation-delay:-11s" aria-hidden="true">
+    <span class="marquee-item">My Favourite Person</span><span class="marquee-item">Fifteen Candles</span>
+    <span class="marquee-item">You Are My World</span><span class="marquee-item">Growing Up So Fast</span>
+    <span class="marquee-item">My Little Sister</span><span class="marquee-item">My Favourite Person</span>
+    <span class="marquee-item">Fifteen Candles</span><span class="marquee-item">You Are My World</span>
+    <span class="marquee-item">Growing Up So Fast</span><span class="marquee-item">My Little Sister</span>
+  </div>
+</div>
+
+<!-- ══ LOVE CARDS ═════════════ -->
 <section id="love" class="section">
-  <h2 class="section-title reveal">15 Things I Love About You</h2>
+  <h2 class="section-title rv">15 Things I Love About You</h2>
   <div class="cards-grid">
-    <div class="love-card reveal d1"><span class="num">01</span><div class="shimmer-line"></div><p>Your smile that can brighten even the darkest, coldest day.</p></div>
-    <div class="love-card reveal d2"><span class="num">02</span><div class="shimmer-line"></div><p>The kindness you show to every single person around you.</p></div>
-    <div class="love-card reveal d3"><span class="num">03</span><div class="shimmer-line"></div><p>The way you always make ordinary moments feel so special.</p></div>
-    <div class="love-card reveal d4"><span class="num">04</span><div class="shimmer-line"></div><p>Your beautiful heart and the way you genuinely care.</p></div>
-    <div class="love-card reveal d5"><span class="num">05</span><div class="shimmer-line"></div><p>Your laugh that instantly makes everything in the world better.</p></div>
-    <div class="love-card reveal d1"><span class="num">06</span><div class="shimmer-line"></div><p>The strength you show when life gets difficult and heavy.</p></div>
-    <div class="love-card reveal d2"><span class="num">07</span><div class="shimmer-line"></div><p>Your honesty — even when it's not the easy thing to say.</p></div>
-    <div class="love-card reveal d3"><span class="num">08</span><div class="shimmer-line"></div><p>The way you never stop chasing your most beautiful dreams.</p></div>
-    <div class="love-card reveal d4"><span class="num">09</span><div class="shimmer-line"></div><p>Your ability to make people feel comfortable, safe, and loved.</p></div>
-    <div class="love-card reveal d5"><span class="num">10</span><div class="shimmer-line"></div><p>Your creativity and your unique, magical way of seeing the world.</p></div>
-    <div class="love-card reveal d1"><span class="num">11</span><div class="shimmer-line"></div><p>Every single memory we've created and lived together.</p></div>
-    <div class="love-card reveal d2"><span class="num">12</span><div class="shimmer-line"></div><p>Your confidence and determination to keep moving, always.</p></div>
-    <div class="love-card reveal d3"><span class="num">13</span><div class="shimmer-line"></div><p>The way you've grown into such a genuinely amazing person.</p></div>
-    <div class="love-card reveal d4"><span class="num">14</span><div class="shimmer-line"></div><p>The happiness you bring into my life simply by being you.</p></div>
-    <div class="love-card reveal d5"><span class="num">15</span><div class="shimmer-line"></div><p>Simply being my sister and one of my favourite people in this world. 🤍</p></div>
+    <div class="love-card rv d1"><span class="num">01</span><div class="shimmer-line"></div><p>Your smile that can brighten even the darkest, coldest day.</p></div>
+    <div class="love-card rv d2"><span class="num">02</span><div class="shimmer-line"></div><p>The kindness you show to every single person around you.</p></div>
+    <div class="love-card rv d3"><span class="num">03</span><div class="shimmer-line"></div><p>The way you always make ordinary moments feel so special.</p></div>
+    <div class="love-card rv d4"><span class="num">04</span><div class="shimmer-line"></div><p>Your beautiful heart and the way you genuinely care.</p></div>
+    <div class="love-card rv d5"><span class="num">05</span><div class="shimmer-line"></div><p>Your laugh that instantly makes everything in the world better.</p></div>
+    <div class="love-card rv d1"><span class="num">06</span><div class="shimmer-line"></div><p>The strength you show when life gets difficult and heavy.</p></div>
+    <div class="love-card rv d2"><span class="num">07</span><div class="shimmer-line"></div><p>Your honesty — even when it's not the easy thing to say.</p></div>
+    <div class="love-card rv d3"><span class="num">08</span><div class="shimmer-line"></div><p>The way you never stop chasing your most beautiful dreams.</p></div>
+    <div class="love-card rv d4"><span class="num">09</span><div class="shimmer-line"></div><p>Your ability to make people feel comfortable, safe, and loved.</p></div>
+    <div class="love-card rv d5"><span class="num">10</span><div class="shimmer-line"></div><p>Your creativity and your unique, magical way of seeing the world.</p></div>
+    <div class="love-card rv d1"><span class="num">11</span><div class="shimmer-line"></div><p>Every single memory we've created and lived together.</p></div>
+    <div class="love-card rv d2"><span class="num">12</span><div class="shimmer-line"></div><p>Your confidence and determination to keep moving, always.</p></div>
+    <div class="love-card rv d3"><span class="num">13</span><div class="shimmer-line"></div><p>The way you've grown into such a genuinely amazing person.</p></div>
+    <div class="love-card rv d4"><span class="num">14</span><div class="shimmer-line"></div><p>The happiness you bring into my life simply by being you.</p></div>
+    <div class="love-card rv d5"><span class="num">15</span><div class="shimmer-line"></div><p>Simply being my sister and one of my favourite people in this world. 🤍</p></div>
   </div>
 </section>
 
-<!-- ── LETTER ─────────────────────────────────── -->
+<!-- ══ PHOTO ROW 2 ════════════ -->
+<div class="split-row two">
+  <div class="split-photo wide rv-l d1" data-lb="5">
+    <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo4.jpg" alt="Memory">
+    <div class="ph">✨<span>Memory</span></div>
+  </div>
+  <div class="split-photo wide rv-r d2" data-lb="6">
+    <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo5.jpg" alt="Memory">
+    <div class="ph">🎀<span>Memory</span></div>
+  </div>
+</div>
+
+<!-- ══ LETTER ═════════════════ -->
 <section id="letter-section" class="section">
-  <h2 class="section-title reveal">A Letter From My Heart</h2>
-  <div class="letter-wrap reveal">
-    <span class="letter-salutation">Dear Sister,</span>
-    <p class="letter-body">
-      Sometimes I wonder how fifteen years passed so quickly.
-      It feels like yesterday when you were small enough to hold my hand while walking…
-      and now you are growing into someone so beautiful, strong, and full of dreams.
-      <br><br>
-      Watching you grow has been one of the most emotional and beautiful journeys of my life.
-      You are not just my sister.
-      You are my comfort place, my happiness, my childhood,
-      and one of the most precious parts of my heart.
-      <br><br>
-      Thank you for every laugh, every memory, every silly fight,
-      every late-night conversation, and every single moment
-      that made life feel brighter just because you were there.
-      <br><br>
-      I hope this new chapter brings you endless happiness,
-      beautiful friendships, peaceful nights,
-      unforgettable adventures,
-      and dreams that finally come true.
-      <br><br>
-      And no matter where life takes us — always remember:
-      <br><br>
-      <span class="letter-highlight">You will never walk alone.</span>
-      <br><br>
-      I will always be proud of you. Always.
-    </p>
-    <div class="letter-sign">
-      <span>Your Brother 🤍</span>
+  <h2 class="section-title rv">A Letter From My Heart</h2>
+  <div class="letter-layout">
+    <div class="letter-photo-col rv-l">
+      <div class="letter-side-photo" data-lb="7">
+        <img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo6.jpg" alt="Memory" style="aspect-ratio:3/4">
+        <div class="ph">🌼<span>Memory</span></div>
+      </div>
+
+    </div>
+    <div class="letter-wrap rv-r">
+      <span class="letter-salutation">Dear Sister,</span>
+      <p class="letter-body">
+        Sometimes I wonder how fifteen years passed so quickly.
+        It feels like yesterday when you were small enough to hold my hand while walking…
+        and now you are growing into someone so beautiful, strong, and full of dreams.
+        <br><br>
+        Watching you grow has been one of the most emotional and beautiful journeys of my life.
+        You are not just my sister.
+        You are my comfort place, my happiness, my childhood,
+        and one of the most precious parts of my heart.
+        <br><br>
+        Thank you for every laugh, every memory, every silly fight,
+        every late-night conversation, and every single moment
+        that made life feel brighter just because you were there.
+        <br><br>
+        I hope this new chapter brings you endless happiness,
+        beautiful friendships, peaceful nights,
+        unforgettable adventures,
+        and dreams that finally come true.
+        <br><br>
+        And no matter where life takes us — always remember:
+        <br><br>
+        <span class="letter-highlight">You will never walk alone.</span>
+        <br><br>
+        I will always be proud of you. Always.
+      </p>
+      <div class="letter-sign"><span>Your Brother 🤍</span></div>
     </div>
   </div>
 </section>
 
-<!-- ── DREAM ──────────────────────────────────── -->
+<!-- ══ DREAM ══════════════════ -->
 <section id="dream" class="section">
-  <div class="orb" style="width:300px;height:300px;top:-80px;left:-80px;background:radial-gradient(circle,rgba(232,160,184,0.3),transparent);animation-duration:8s"></div>
-  <div class="orb" style="width:250px;height:250px;bottom:-60px;right:-60px;background:radial-gradient(circle,rgba(195,160,200,0.25),transparent);animation-duration:10s;animation-delay:-3s"></div>
-  <div class="dream-inner reveal-scale">
+  <div class="orb" style="width:280px;height:280px;top:-70px;left:-70px;background:radial-gradient(circle,rgba(232,160,184,0.28),transparent);animation-duration:8s"></div>
+  <div class="orb" style="width:230px;height:230px;bottom:-55px;right:-55px;background:radial-gradient(circle,rgba(195,160,200,0.22),transparent);animation-duration:11s;animation-delay:-3s"></div>
+  <div class="dream-inner rv-s">
     <span class="dream-eyebrow">✦ &nbsp; Looking ahead &nbsp; ✦</span>
     <h2 class="dream-heading">Your Story Is Only Beginning…</h2>
     <div class="hero-line"></div>
     <p class="dream-para">
-      May your future be filled with magical moments,
-      beautiful friendships, peaceful nights,
-      unforgettable adventures,
-      and dreams brighter than the stars above.
+      May your future be filled with magical moments,<br>
+      beautiful friendships, peaceful nights,<br>
+      unforgettable adventures,<br>
+      and dreams brighter than all the stars above.
     </p>
   </div>
 </section>
 
-<!-- ── FINAL ──────────────────────────────────── -->
+<!-- ══ FINAL ══════════════════ -->
 <section id="final" class="section">
   <div class="final-inner">
-    <div class="confetti-wrap">
+    <div class="confetti-wrap rv">
       <span>🎂</span><span>🌸</span><span>✨</span><span>🎀</span><span>💕</span>
     </div>
-    <p class="final-quote reveal">
+    <p class="final-quote rv d1">
       "This is not the end of our story.<br>
       It's just the beginning of another<br>
       beautiful chapter."
     </p>
-    <div class="hero-line reveal d1"></div>
-    <h2 class="final-name reveal d2">Happy 15th Birthday</h2>
-    <p class="hero-para reveal d3" style="color:var(--text-l)">Cutie Pie 🌸</p>
+    <div class="hero-line rv d2"></div>
+    <div class="final-photo-ring rv d3">
+      <div class="fp" data-lb="2"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo1.jpg" alt=""></div>
+      <div class="fp" data-lb="5"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo4.jpg" alt=""></div>
+      <div class="fp" data-lb="8"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo10.jpg" alt=""></div>
+      <div class="fp" data-lb="3"><img src="https://raw.githubusercontent.com/helptool/hbday/main/photos/photo2.jpg" alt=""></div>
+    </div>
+    <h2 class="final-name rv d4">Happy 15th Birthday</h2>
+    <p class="final-sub rv d5">Cutie Pie 🌸</p>
     <span class="final-heart">❤️</span>
   </div>
 </section>
@@ -1023,225 +668,205 @@ main{position:relative;z-index:3}
 </main>
 
 <script>
-/* ──────────────────────────────────────────────
-   CANVAS SOFT-BOKEH BACKGROUND
-──────────────────────────────────────────────── */
+/* ── CANVAS BOKEH ──────── */
 (function(){
-  const canvas = document.getElementById('canvas-bg');
-  const ctx    = canvas.getContext('2d');
-  let W, H, circles=[];
-
-  function resize(){
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+  const c=document.getElementById('canvas-bg'),ctx=c.getContext('2d');
+  let W,H,circles=[];
+  const isMob=window.innerWidth<600;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  function mk(){
+    const cols=['rgba(232,160,184,','rgba(195,160,200,','rgba(245,200,215,','rgba(212,168,85,'];
+    return{x:Math.random()*W,y:Math.random()*H,r:60+Math.random()*150,
+      c:cols[Math.floor(Math.random()*cols.length)],
+      a:0.04+Math.random()*0.07,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.22};
   }
-
-  function makeCircle(){
-    const colors = [
-      'rgba(232,160,184,',
-      'rgba(195,160,200,',
-      'rgba(245,200,215,',
-      'rgba(212,168,85,',
-    ];
-    return {
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: 60 + Math.random()*160,
-      c: colors[Math.floor(Math.random()*colors.length)],
-      a: 0.04 + Math.random()*0.08,
-      vx: (Math.random()-0.5)*0.3,
-      vy: (Math.random()-0.5)*0.25,
-    };
-  }
-
-  function init(){
-    resize();
-    circles = Array.from({length:8},makeCircle);
-  }
-
+  function init(){resize();circles=Array.from({length:isMob?6:9},mk)}
   function draw(){
     ctx.clearRect(0,0,W,H);
-    circles.forEach(c=>{
-      const g = ctx.createRadialGradient(c.x,c.y,0,c.x,c.y,c.r);
-      g.addColorStop(0, c.c+c.a+')');
-      g.addColorStop(1, c.c+'0)');
-      ctx.beginPath();
-      ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
-      ctx.fillStyle = g;
-      ctx.fill();
-      c.x += c.vx; c.y += c.vy;
-      if(c.x<-c.r||c.x>W+c.r) c.vx*=-1;
-      if(c.y<-c.r||c.y>H+c.r) c.vy*=-1;
+    circles.forEach(o=>{
+      const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+      g.addColorStop(0,o.c+o.a+')');g.addColorStop(1,o.c+'0)');
+      ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      o.x+=o.vx;o.y+=o.vy;
+      if(o.x<-o.r||o.x>W+o.r)o.vx*=-1;
+      if(o.y<-o.r||o.y>H+o.r)o.vy*=-1;
     });
     requestAnimationFrame(draw);
   }
-
   window.addEventListener('resize',resize);
-  init(); draw();
+  init();draw();
 })();
 
-/* ──────────────────────────────────────────────
-   PETALS GENERATOR
-──────────────────────────────────────────────── */
+/* ── PETALS ────────────── */
 (function(){
-  const container = document.getElementById('petals');
-  const colors = [
-    'rgba(255,182,200,0.65)',
-    'rgba(220,160,195,0.55)',
-    'rgba(255,210,225,0.6)',
-    'rgba(200,160,220,0.5)',
-    'rgba(255,195,210,0.6)',
-  ];
-  const total = window.innerWidth < 500 ? 10 : 18;
-
+  const wrap=document.getElementById('petals');
+  const cols=['rgba(255,182,200,0.6)','rgba(220,160,195,0.5)','rgba(255,210,225,0.55)','rgba(200,160,220,0.45)','rgba(255,195,210,0.55)'];
+  const total=window.innerWidth<500?8:16;
   for(let i=0;i<total;i++){
-    const p = document.createElement('div');
-    p.className = 'petal';
-    const size = 10 + Math.random()*14;
-    p.style.cssText = `
-      left:${Math.random()*100}%;
-      width:${size}px; height:${size}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration:${9+Math.random()*12}s;
-      animation-delay:${Math.random()*12}s;
-      border-radius:${Math.random()>0.5?'0% 70% 0% 70%':'70% 0% 70% 0%'};
-      filter:blur(${Math.random()*1.5}px);
-    `;
-    container.appendChild(p);
+    const p=document.createElement('div');p.className='petal';
+    const sz=8+Math.random()*12;
+    p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      animation-duration:${9+Math.random()*13}s;animation-delay:${Math.random()*15}s;
+      border-radius:${Math.random()>.5?'0% 70% 0% 70%':'70% 0% 70% 0%'};
+      filter:blur(${Math.random()*1.2}px)`;
+    wrap.appendChild(p);
   }
 })();
 
-/* ──────────────────────────────────────────────
-   SCROLL PROGRESS BAR
-──────────────────────────────────────────────── */
+/* ── PROGRESS BAR ──────── */
 (function(){
-  const bar = document.getElementById('progress');
-  function update(){
-    const s = window.scrollY;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = (s/max*100)+'%';
-  }
-  window.addEventListener('scroll',update,{passive:true});
+  const bar=document.getElementById('progress');
+  window.addEventListener('scroll',()=>{
+    const s=window.scrollY,max=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(max>0?s/max*100:0)+'%';
+  },{passive:true});
 })();
 
-/* ──────────────────────────────────────────────
-   INTERSECTION OBSERVER — SCROLL REVEAL
-──────────────────────────────────────────────── */
+/* ── SCROLL REVEAL ─────── */
 (function(){
-  const els = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
-  },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  const els=document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-s,.rv-rot');
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}});
+  },{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
   els.forEach(el=>io.observe(el));
 })();
 
-/* ──────────────────────────────────────────────
-   MUSIC TOGGLE
-──────────────────────────────────────────────── */
+/* ── MUSIC ─────────────── */
 (function(){
-  const btn   = document.getElementById('music-btn');
-  const audio = document.getElementById('bgMusic');
-  let playing = false;
+  const btn=document.getElementById('music-btn'),audio=document.getElementById('bgMusic');
+  let playing=false;
   btn.addEventListener('click',()=>{
-    playing = !playing;
-    if(playing){
-      audio.play().catch(()=>{});
-      btn.textContent='🎶';
-      btn.classList.add('playing');
-    } else {
-      audio.pause();
-      btn.textContent='🎵';
-      btn.classList.remove('playing');
-    }
+    playing=!playing;
+    if(playing){audio.play().catch(()=>{});btn.textContent='🎶';btn.classList.add('playing')}
+    else{audio.pause();btn.textContent='🎵';btn.classList.remove('playing')}
   });
 })();
 
-/* ──────────────────────────────────────────────
-   CURSOR SPARKLE TRAIL
-──────────────────────────────────────────────── */
+/* ── CURSOR SPARKLE (desktop) */
 (function(){
-  if(window.innerWidth < 768) return; // skip on mobile (touch)
-  let last = 0;
-  const colors = ['#e8a0b8','#c3a0c8','#d4a855','#f5bfd7','#d8b4fe'];
+  if(window.innerWidth<768)return;
+  let last=0;
+  const cols=['#e8a0b8','#c3a0c8','#d4a855','#f5bfd7','#d8b4fe'];
   document.addEventListener('mousemove',e=>{
-    const now = Date.now();
-    if(now - last < 60) return;
-    last = now;
+    const now=Date.now();if(now-last<55)return;last=now;
     for(let i=0;i<3;i++){
-      const s = document.createElement('div');
-      s.className='sparkle';
-      const angle = Math.random()*Math.PI*2;
-      const dist  = 20+Math.random()*30;
-      s.style.cssText=`
-        left:${e.clientX}px; top:${e.clientY}px;
-        background:${colors[Math.floor(Math.random()*colors.length)]};
-        width:${4+Math.random()*5}px; height:${4+Math.random()*5}px;
-        --tx:${Math.cos(angle)*dist}px; --ty:${Math.sin(angle)*dist}px;
-        animation-delay:${i*0.08}s;
-      `;
-      document.body.appendChild(s);
-      setTimeout(()=>s.remove(), 700);
+      const s=document.createElement('div');s.className='sparkle';
+      const angle=Math.random()*Math.PI*2,dist=16+Math.random()*28;
+      s.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;
+        background:${cols[Math.floor(Math.random()*cols.length)]};
+        width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;
+        --tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;
+        animation-delay:${i*0.07}s`;
+      document.body.appendChild(s);setTimeout(()=>s.remove(),700);
     }
   });
 })();
 
-/* ──────────────────────────────────────────────
-   TIMELINE DOT GLOW ON SCROLL
-──────────────────────────────────────────────── */
+/* ── LIGHTBOX ──────────── */
 (function(){
-  const dots = document.querySelectorAll('.tl-dot');
-  const io = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.style.background='var(--rose-d)';
-        e.target.style.transform='scale(1.2)';
-      }
-    });
-  },{threshold:0.8});
-  dots.forEach(d=>io.observe(d));
-})();
-
-/* ──────────────────────────────────────────────
-   GALLERY LAZY LOAD FALLBACK
-──────────────────────────────────────────────── */
-(function(){
-  document.querySelectorAll('.gallery-item img').forEach(img=>{
-    img.addEventListener('load',()=>{
-      const ph = img.nextElementSibling;
-      if(ph) ph.style.display='none';
-    });
-    img.addEventListener('error',()=>{
-      img.style.display='none';
-    });
-    // trigger check if already loaded
-    if(img.complete && img.naturalWidth>0){
-      const ph = img.nextElementSibling;
-      if(ph) ph.style.display='none';
-    }
+  const lb=document.getElementById('lightbox');
+  const img=document.getElementById('lb-img');
+  const counter=document.getElementById('lb-counter');
+  const BASE='https://raw.githubusercontent.com/helptool/hbday/main/photos/';
+  const PHOTOS=[
+    BASE+'photo7.jpg',   // 0
+    BASE+'photo8.jpg',   // 1
+    BASE+'photo1.jpg',   // 2
+    BASE+'photo2.jpg',   // 3
+    BASE+'photo3.jpg',   // 4
+    BASE+'photo4.jpg',   // 5
+    BASE+'photo5.jpg',   // 6
+    BASE+'photo6.jpg',   // 7
+    BASE+'photo10.jpg',  // 8
+  ];
+  let cur=0;
+  function open(idx){
+    cur=(idx+PHOTOS.length)%PHOTOS.length;
+    img.src=PHOTOS[cur];
+    lb.classList.add('open');
+    counter.textContent=(cur+1)+' / '+PHOTOS.length;
+    document.body.style.overflow='hidden';
+  }
+  function close(){lb.classList.remove('open');document.body.style.overflow=''}
+  document.getElementById('lb-close').addEventListener('click',close);
+  document.getElementById('lb-prev').addEventListener('click',()=>open(cur-1));
+  document.getElementById('lb-next').addEventListener('click',()=>open(cur+1));
+  lb.addEventListener('click',e=>{if(e.target===lb)close()});
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='ArrowRight')open(cur+1);
+    if(e.key==='ArrowLeft')open(cur-1);
+    if(e.key==='Escape')close();
+  });
+  document.querySelectorAll('[data-lb]').forEach(el=>{
+    el.style.cursor='pointer';
+    el.addEventListener('click',()=>open(parseInt(el.dataset.lb)));
   });
 })();
 
-/* ──────────────────────────────────────────────
-   CARD TILT (desktop only)
-──────────────────────────────────────────────── */
+/* ── CARD TILT (desktop) ── */
 (function(){
-  if(window.innerWidth < 768) return;
+  if(window.innerWidth<768)return;
   document.querySelectorAll('.love-card,.letter-wrap').forEach(card=>{
     card.addEventListener('mousemove',e=>{
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width  - 0.5;
-      const y = (e.clientY - r.top)  / r.height - 0.5;
-      card.style.transform = `perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-6px)`;
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(800px) rotateY(${x*6}deg) rotateX(${-y*6}deg) translateY(-6px)`;
     });
-    card.addEventListener('mouseleave',()=>{
-      card.style.transform='';
-    });
+    card.addEventListener('mouseleave',()=>{card.style.transform=''});
   });
+})();
+
+/* ── IMAGE LOAD ─────────── */
+(function(){
+  document.querySelectorAll('.split-photo img,.gm-item img,.ps-item img,.letter-side-photo img,.fp img').forEach(im=>{
+    function hide(){const ph=im.parentElement.querySelector('.ph');if(ph)ph.style.opacity='0'}
+    if(im.complete&&im.naturalWidth>0)hide();
+    else im.addEventListener('load',hide);
+    im.addEventListener('error',()=>{im.style.display='none'});
+  });
+})();
+
+/* ── COUNTDOWN ─────────── */
+(function(){
+  const TARGET=new Date('2026-06-10T00:00:00+05:30');
+  const BORN  =new Date('2011-06-10T00:00:00+05:30');
+  const $=id=>document.getElementById(id);
+  const days=$('cd-days'),hours=$('cd-hours'),mins=$('cd-mins'),secs=$('cd-secs'),total=$('cd-total');
+  const lvDays=$('lv-days'),lvHrs=$('lv-hrs'),lvMin=$('lv-min'),lvSec=$('lv-sec');
+
+  function setEl(el,str){
+    if(!el||el.textContent===str)return;
+    el.classList.add('out');
+    setTimeout(()=>{el.textContent=str;el.classList.remove('out');},120);
+  }
+
+  function tick(){
+    const now=new Date();
+    const diff=Math.max(0,TARGET-now);
+    const ts=Math.floor(diff/1000);
+    const d=Math.floor(ts/86400);
+    const h=Math.floor((ts%86400)/3600);
+    const m=Math.floor((ts%3600)/60);
+    const s=ts%60;
+    const pad=n=>String(n).padStart(2,'0');
+    setEl(days,pad(d));setEl(hours,pad(h));setEl(mins,pad(m));setEl(secs,pad(s));
+    setEl(total,ts.toLocaleString('en-IN'));
+
+    const livedTs=Math.floor((now-BORN)/1000);
+    setEl(lvDays, Math.floor(livedTs/86400).toLocaleString('en-IN'));
+    setEl(lvHrs,  pad(Math.floor((livedTs%86400)/3600)));
+    setEl(lvMin,  pad(Math.floor((livedTs%3600)/60)));
+    setEl(lvSec,  pad(livedTs%60));
+
+    if(diff<=0){clearInterval(timer);
+      [days,hours,mins,secs].forEach(e=>e&&(e.textContent='00'));
+      total&&(total.textContent='0');
+    }
+  }
+  tick();
+  const timer=setInterval(tick,1000);
 })();
 </script>
 </body>
